@@ -16,7 +16,7 @@ struct User: LabelsPresentable, DictCreatable, UserProtocol {
   let id: Int
   let name: String
   
-  init?(dict: [NSObject : AnyObject]) {
+  init?(dict: [AnyHashable: Any]) {
     guard let theId = dict["id"] as? Int else { return nil }
     guard let theName = dict["login"] as? String else { return nil }
     

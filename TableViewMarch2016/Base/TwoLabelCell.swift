@@ -8,22 +8,22 @@
 
 import UIKit
 
-class TwoLabelCell<DataType where DataType: LabelsPresentable>:UITableViewCell, Configurable {
+class TwoLabelCell<DataType>:UITableViewCell, Configurable where DataType: LabelsPresentable {
   
   let nameLabel: UILabel
   let descriptionLabel: UILabel
   
   override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
     nameLabel = UILabel()
-    nameLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
+    nameLabel.font = UIFont.preferredFont(forTextStyle: UIFontTextStyle.headline)
     
     descriptionLabel = UILabel()
-    descriptionLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
+    descriptionLabel.font = UIFont.preferredFont(forTextStyle: UIFontTextStyle.subheadline)
     descriptionLabel.numberOfLines = 2
     
     let stackView = UIStackView(arrangedSubviews: [nameLabel, descriptionLabel])
     stackView.translatesAutoresizingMaskIntoConstraints = false
-    stackView.axis = .Vertical
+    stackView.axis = .vertical
     
     super.init(style: style, reuseIdentifier: reuseIdentifier)
     
@@ -31,9 +31,9 @@ class TwoLabelCell<DataType where DataType: LabelsPresentable>:UITableViewCell, 
     
     let views = ["stackView": stackView]
     var layoutConstraints = [NSLayoutConstraint]()
-    layoutConstraints += NSLayoutConstraint.constraintsWithVisualFormat("|-[stackView]-|", options: [], metrics: nil, views: views)
-    layoutConstraints += NSLayoutConstraint.constraintsWithVisualFormat("V:|-[stackView]-|", options: [], metrics: nil, views: views)
-    NSLayoutConstraint.activateConstraints(layoutConstraints)
+    layoutConstraints += NSLayoutConstraint.constraints(withVisualFormat: "|-[stackView]-|", options: [], metrics: nil, views: views)
+    layoutConstraints += NSLayoutConstraint.constraints(withVisualFormat: "V:|-[stackView]-|", options: [], metrics: nil, views: views)
+    NSLayoutConstraint.activate(layoutConstraints)
   }
   
   required init?(coder aDecoder: NSCoder) {

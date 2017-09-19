@@ -13,7 +13,7 @@ struct Repository: LabelsPresentable, DictCreatable {
   let name: String
   let description: String
   
-  init?(dict: [NSObject: AnyObject]) {
+  init?(dict: [AnyHashable: Any]) {
     guard let theId = dict["id"] as? Int else { return nil }
     guard let theName = dict["name"] as? String else { return nil }
     guard let theDescription = dict["description"] as? String else { return nil }

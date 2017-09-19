@@ -22,7 +22,7 @@ class TraditionalUserSerachTableViewController: UITableViewController, UISearchB
     searchBar.delegate = self
     tableView.tableHeaderView = searchBar
     
-    tableView.registerClass(TwoLabelCell<User>.self, forCellReuseIdentifier: "Cell")
+    tableView.register(TwoLabelCell<User>.self, forCellReuseIdentifier: "Cell")
     
     tableView.estimatedRowHeight = 50
     tableView.rowHeight = UITableViewAutomaticDimension
@@ -31,15 +31,15 @@ class TraditionalUserSerachTableViewController: UITableViewController, UISearchB
 
 // MARK: - UITableViewDataSource
 extension TraditionalUserSerachTableViewController {
-  override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+  override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return users.count
   }
   
-  override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+  override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     
     let user = users[indexPath.row]
     
-    let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! TwoLabelCell<User>
+    let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! TwoLabelCell<User>
     cell.nameLabel.text = user.name
     return cell
   }
@@ -47,7 +47,7 @@ extension TraditionalUserSerachTableViewController {
 
 //MARK - UITableViewDelegate
 extension TraditionalUserSerachTableViewController {
-  override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+  override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     let next = TraditionalRepositoriesTableViewController()
     next.username = self.users[indexPath.row].name
     navigationController?.pushViewController(next, animated: true)
@@ -56,10 +56,10 @@ extension TraditionalUserSerachTableViewController {
 
 //MARK: - UISearchBarDelegate
 extension TraditionalUserSerachTableViewController {
-  func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+  func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
     searchBar.resignFirstResponder()
     
-    guard let searchString = searchBar.text where searchString.characters.count > 0 else { return }
+    guard let searchString = searchBar.text, searchString.characters.count > 0 else { return }
     let fetch = APIClient<User>().fetchUsers(forSearchString: searchString)
     fetch { (items, error) -> Void in
       guard let theItems = items else { return }

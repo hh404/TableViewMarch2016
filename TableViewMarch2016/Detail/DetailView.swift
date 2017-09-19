@@ -16,17 +16,17 @@ class DetailView: UIView {
   
   override init(frame: CGRect) {
     nameLabel = UILabel()
-    nameLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleTitle1)
-    nameLabel.textAlignment = .Center
+    nameLabel.font = UIFont.preferredFont(forTextStyle: UIFontTextStyle.title1)
+    nameLabel.textAlignment = .center
     
     descriptionLabel = UILabel()
-    descriptionLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
+    descriptionLabel.font = UIFont.preferredFont(forTextStyle: UIFontTextStyle.subheadline)
     descriptionLabel.numberOfLines = 2
-    descriptionLabel.textAlignment = .Center
+    descriptionLabel.textAlignment = .center
     
     stackView = UIStackView(arrangedSubviews: [nameLabel, descriptionLabel])
     stackView.translatesAutoresizingMaskIntoConstraints = false
-    stackView.axis = .Vertical
+    stackView.axis = .vertical
     stackView.spacing = 5
     
     super.init(frame: frame)
@@ -35,8 +35,8 @@ class DetailView: UIView {
     
     let views = ["stackView": stackView]
     var layoutConstraints = [NSLayoutConstraint]()
-    layoutConstraints += NSLayoutConstraint.constraintsWithVisualFormat("|-[stackView]-|", options: [], metrics: nil, views: views)
-    NSLayoutConstraint.activateConstraints(layoutConstraints)
+    layoutConstraints += NSLayoutConstraint.constraints(withVisualFormat: "|-[stackView]-|", options: [], metrics: nil, views: views)
+    NSLayoutConstraint.activate(layoutConstraints)
   }
   
   required init?(coder aDecoder: NSCoder) {

@@ -9,18 +9,18 @@
 import Foundation
 
 enum GithubURL {
-  case Repositories(String)
-  case Users(String)
+  case repositories(String)
+  case users(String)
   
   var baseURLString: String { return "https://api.github.com" }
   
-  func url() -> NSURL? {
+  func url() -> URL? {
     switch self {
-    case .Repositories(let user):
-      return NSURL(string: "\(baseURLString)/users/\(user)/repos")
-    case .Users(let searchString):
-      guard let encodedSearchString = searchString.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet()) else { return nil }
-      return NSURL(string: "\(baseURLString)/search/users?q=\(encodedSearchString)")
+    case .repositories(let user):
+      return URL(string: "\(baseURLString)/users/\(user)/repos")
+    case .users(let searchString):
+      guard let encodedSearchString = searchString.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else { return nil }
+      return URL(string: "\(baseURLString)/search/users?q=\(encodedSearchString)")
     }
   }
 }

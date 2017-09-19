@@ -8,38 +8,42 @@
 
 import UIKit
 
-class TableViewController<Cell: UITableViewCell where Cell: Configurable>: UITableViewController {
+class TableViewController<Cell: UITableViewCell>: UITableViewController where Cell: Configurable {
   typealias DataType = Cell.DataType
-  private let cellIdentifier = String(Cell)
+  fileprivate let cellIdentifier = String(describing: Cell())
   var data = [DataType]() {
     didSet {
       tableView.reloadData()
-      if tableView.numberOfRowsInSection(0) > 0 {
-        tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: 0,inSection: 0),
-                                         atScrollPosition: .Top,
+      if tableView.numberOfRows(inSection: 0) > 0 {
+        tableView.scrollToRow(at: IndexPath(row: 0,section: 0),
+                                         at: .top,
                                          animated: true)
       }
     }
   }
   
   init() { super.init(nibName: nil, bundle: nil) }
+
+  required init?(coder aDecoder: NSCoder) {
+      fatalError("init(coder:) has not been implemented")
+  }
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    tableView.registerClass(Cell.self, forCellReuseIdentifier: cellIdentifier)
+    tableView.register(Cell.self, forCellReuseIdentifier: cellIdentifier)
     tableView.rowHeight = UITableViewAutomaticDimension
     tableView.estimatedRowHeight = 60
   }
   
   // MARK: - Table view data source
-  override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+  override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return data.count
   }
   
-  override func tableView(tableView: UITableView,
-                          cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier,
-                                                           forIndexPath: indexPath) as! Cell
+  override func tableView(_ tableView: UITableView,
+                          cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier,
+                                                           for: indexPath) as! Cell
     cell.config(withItem: data[indexPath.row])
     return cell
   }

@@ -12,7 +12,7 @@ class UserSearchTableViewController: TableViewController<TwoLabelCell<User>>, UI
   
   var searchString: String? {
     didSet {
-      guard let searchString = searchString where searchString.characters.count > 0 else { return }
+      guard let searchString = searchString, searchString.characters.count > 0 else { return }
       let fetch = APIClient<User>().fetchUsers(forSearchString: searchString)
       fetch { (items, error) -> Void in
         guard let theItems = items else { return }
@@ -32,12 +32,12 @@ class UserSearchTableViewController: TableViewController<TwoLabelCell<User>>, UI
     tableView.tableHeaderView = searchBar
   }
   
-  @objc func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+  @objc func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
     searchBar.resignFirstResponder()
     searchString = searchBar.text
   }
   
-  override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+  override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     let next = RepositoriesTableViewController()
     next.username = self.data[indexPath.row].name
     navigationController?.pushViewController(next, animated: true)

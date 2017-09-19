@@ -9,5 +9,5 @@
 import Foundation
 
 protocol DictCreatable {
-  init?(dict: [NSObject: AnyObject])
+  init?(dict: [AnyHashable: Any])
 }

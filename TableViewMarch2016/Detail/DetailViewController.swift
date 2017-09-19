@@ -14,7 +14,7 @@ class DetailViewController: UIViewController {
   
   override func loadView() {
     let contentView = DetailView()
-    contentView.backgroundColor = UIColor.whiteColor()
+    contentView.backgroundColor = UIColor.white
     if let repository = repository {
       contentView.nameLabel.text = repository.name
       contentView.descriptionLabel.text = repository.description
@@ -23,6 +23,6 @@ class DetailViewController: UIViewController {
   }
   
   override func viewWillLayoutSubviews() {
-    (view as? DetailView)?.stackView.topAnchor.constraintEqualToAnchor(topLayoutGuide.bottomAnchor, constant: 20).active = true
+    (view as? DetailView)?.stackView.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: 20).isActive = true
   }
 }

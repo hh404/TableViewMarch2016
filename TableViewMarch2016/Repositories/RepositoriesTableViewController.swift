@@ -12,7 +12,7 @@ class RepositoriesTableViewController: TableViewController<TwoLabelCell<Reposito
   
   var username: String? {
     didSet {
-      guard let username = username where username.characters.count > 0 else { return }
+      guard let username = username, username.characters.count > 0 else { return }
       let fetch = APIClient<Repository>().fetchItems(forUser: username)
       fetch { (items, error) -> Void in
         self.title = username
@@ -22,7 +22,7 @@ class RepositoriesTableViewController: TableViewController<TwoLabelCell<Reposito
     }
   }
   
-  override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+  override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     let nextViewController = DetailViewController()
     nextViewController.repository = data[indexPath.row] //as? Repository
     navigationController?.pushViewController(nextViewController, animated: true)

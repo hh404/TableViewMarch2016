@@ -10,47 +10,47 @@ import UIKit
 
 struct APIClient<T: DictCreatable> {
   
-  func fetchItems(forUser userName: String) -> (completion: (items: [T]?, error: ErrorType?) -> Void) -> Void {
+  func fetchItems(forUser userName: String) -> (_ completion: @escaping(_ items: [T]?, _ error: Error?) -> Void) -> Void {
     return { completion in
       
-      guard let url = GithubURL.Repositories(userName).url() else {
+      guard let url = GithubURL.repositories(userName).url() else {
         let outputError = NSError(domain: "Invalid username", code: 111, userInfo: nil)
-        completion(items: nil, error: outputError)
+        completion(nil, outputError)
         return
       }
       
       let fetch = self.fetchItems(forURL: url)
-      fetch(completion: completion)
+      fetch(completion)
     }
   }
   
-  func fetchUsers(forSearchString string: String) -> (completion: (items: [T]?, error: ErrorType?) -> Void) -> Void {
+  func fetchUsers(forSearchString string: String) -> (_ completion: @escaping(_ items: [T]?, _ error: Error?) -> Void) -> Void {
     return { completion in
       
-      guard let url = GithubURL.Users(string).url() else {
+      guard let url = GithubURL.users(string).url() else {
         let outputError = NSError(domain: "Invalid search string", code: 111, userInfo: nil)
-        completion(items: nil, error: outputError)
+        completion(nil, outputError)
         return
       }
       
       let fetch = self.fetchItems(forURL: url, inDictionaryForKey: "items")
-      fetch(completion: completion)
+      fetch(completion)
     }
   }
   
-  func fetchItems(forURL url: NSURL, inDictionaryForKey key: String? = nil) -> (completion: (items: [T]?, error: ErrorType?) -> Void) -> Void {
+  func fetchItems(forURL url: URL, inDictionaryForKey key: String? = nil) -> (_ completion:@escaping (_ items: [T]?, _ error: Error?) -> Void) -> Void {
     return { completion in
       var outputItems: [T]? = nil
-      var outputError: ErrorType? = nil
+      var outputError: Error? = nil
       
-      UIApplication.sharedApplication().networkActivityIndicatorVisible = true
-      let session = NSURLSession.sharedSession()
-      session.dataTaskWithURL(url) { (data, response, error) -> Void in
+      UIApplication.shared.isNetworkActivityIndicatorVisible = true
+      let session = URLSession.shared
+      session.dataTask(with: url, completionHandler: { (data, response, error) -> Void in
         
         defer {
-          dispatch_async(dispatch_get_main_queue(), { () -> Void in
-            UIApplication.sharedApplication().networkActivityIndicatorVisible = false
-            completion(items: outputItems, error: outputError)
+          DispatchQueue.main.async(execute: { () -> Void in
+            UIApplication.shared.isNetworkActivityIndicatorVisible = false
+            completion(outputItems, outputError)
           })
         }
         
@@ -61,7 +61,7 @@ struct APIClient<T: DictCreatable> {
         do {
           var itemArray: [[String: AnyObject]] = []
           if let key = key {
-            guard let dict = try NSJSONSerialization.JSONObjectWithData(data, options: []) as? [String: AnyObject] else {
+            guard let dict = try JSONSerialization.jsonObject(with: data, options: []) as? [String: AnyObject] else {
               outputError = NSError(domain: "Invalid response", code: 112, userInfo: nil)
               return
             }
@@ -71,7 +71,7 @@ struct APIClient<T: DictCreatable> {
             }
             itemArray = array
           } else {
-            guard let array = try NSJSONSerialization.JSONObjectWithData(data, options: []) as? [[String: AnyObject]] else {
+            guard let array = try JSONSerialization.jsonObject(with: data, options: []) as? [[String: AnyObject]] else {
               outputError = NSError(domain: "Invalid response", code: 112, userInfo: nil)
               return
             }
@@ -80,7 +80,7 @@ struct APIClient<T: DictCreatable> {
           
           var tempItems = [T]()
           for dict in itemArray {
-            if let item = T(dict: dict) {
+            if let item = T(dict: dict as [NSObject : AnyObject]) {
               tempItems.append(item)
             }
           }
@@ -91,7 +91,7 @@ struct APIClient<T: DictCreatable> {
           outputError = error
         }
         
-        }.resume()
+        }) .resume()
     }
   }
 }
